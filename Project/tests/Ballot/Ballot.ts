@@ -88,9 +88,26 @@ describe("Ballot", function () {
 
   describe("when the voter interact with the vote function in the contract", function () {
     // TODO
-    it("is not implemented", async function () {
-      throw new Error("Not implemented");
+
+    it("test", async function () {
+      const voterAddress = accounts[3].address;
+      await giveRightToVote(ballotContract, voterAddress);
+      await ballotContract.connect(accounts[3]).vote(0);
+      const voter = await ballotContract.voters(voterAddress);
+      await expect(voter.voted).to.eq(true);
+    })
+    
+    it("can not allow a user with no voting rights to vote", async function () {
+      await expect(ballotContract.connect(accounts[3]).vote(1)).to.be.revertedWith("Has no right to vote");
     });
+
+    it("can not let a user that has already voted vote", async function () {
+      const voterAddress = accounts[3].address;
+      await giveRightToVote(ballotContract, voterAddress);
+      await ballotContract.connect(accounts[3]).vote(0)
+      await expect(ballotContract.connect(accounts[3]).vote(0)).to.be.revertedWith("Already voted.");
+    });
+
   });
 
   describe("when the voter interact with the delegate function in the contract", function () {
