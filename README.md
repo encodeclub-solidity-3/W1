@@ -111,6 +111,7 @@ console.log("Awaiting confirmations");
 await voteTx.wait();
 console.log(`Transaction completed. Hash: ${voteTx.hash}`);
 ```
+
 ### Console Output
 ```
 yarn ts-node ./scripts/Ballot/castVote.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f 11 
@@ -124,7 +125,42 @@ Transaction completed. Hash: 0x47d1b4813158d2388be2307163bda01efa14fd06c545d8c6f
 ```
 
 <br></br>
-## 5. Querying the voting results
+
+## 5. Delegating Vote to Someone Else
+### ```delegateVote.ts``` at ```/Project/scripts/Ballot/delegateVote.ts```
+Accounts with voting rights can delegate their vote to another account. Doing so will add their voting weight to their delegate. The Delegate will then have increased voting weight.
+```
+  const voterInfo = await ballotContract.voters(voterAddress);
+  const toInfo = await ballotContract.voters(toAddress);
+  console.log(`Delegating ${voterAddress}'s vote to ${toAddress} account.`);
+  console.log(
+    `VoterInfo - Weight: ${voterInfo.weight}, Voted: ${voterInfo.voted}, Delegate: ${voterInfo.delegate}, Vote: ${voterInfo.vote}`
+  );
+  console.log(
+    `ToInfo - Weight: ${toInfo.weight}, Voted: ${toInfo.voted}, Delegate: ${toInfo.delegate}, Vote: ${toInfo.vote}`
+  );
+  const delegateTx = await ballotContract.delegate(toAddress);
+  delegateTx.wait();
+  console.log("Awaiting confirmations");
+  await delegateTx.wait();
+  console.log(`Transaction completed. Hash: ${delegateTx.hash}`);
+```
+### Console Output
+```
+yarn ts-node ./scripts/Ballot/delegateVote.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f 0x858C60547fE069724B017c8e42c4b27BE4F151C6 
+
+Using address 0x9c1F4Ff1aE57e959128f0356CE15BFE01E3A14E0
+Wallet balance 0.02
+Attaching ballot contract interface to address 0x16d0b05942f2d3b861dcd4544f7773b489410d0f
+Delegating 0x9c1F4Ff1aE57e959128f0356CE15BFE01E3A14E0's vote to 0x858C60547fE069724B017c8e42c4b27BE4F151C6 account.
+VoterInfo - Weight: 1, Voted: false, Delegate: 0x0000000000000000000000000000000000000000, Vote: 0
+ToInfo - Weight: 1, Voted: false, Delegate: 0x0000000000000000000000000000000000000000, Vote: 0
+Awaiting confirmations
+Transaction completed. Hash: 0xcf84c42242939c33d6af51323096ce5740b0d5b64da58ef89f9bd27c3729eddb
+```
+<br></br>
+
+## 6. Querying the voting results
 ### ```queryResults.ts``` at ```/Project/scripts/Ballot/queryResults.ts```
 Call the ballot contract and iterate through the proposals array. Print each proposal and vote count.
 ```
@@ -161,6 +197,33 @@ Results for the ballot asking: What's your favorite cryptocurrency out of the fo
 ```
 
 <br></br>
+
+## 7. Querying the voting results AFTER delegating vote & delegate casts vote
+
+From the delegate's account, they cast a vote for proposal 2. Since they are someone's delegate, their vote counts as 2 votes.
+
+### Console Output
+```
+yarn ts-node ./scripts/Ballot/castVote.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f 2
+
+yarn run ts-node ./scripts/Ballot/queryResults.ts 0x16d0b05942F2D3b861DCd4544f7773b489410d0f
+
+Attaching ballot contract interface to address 0x16d0b05942F2D3b861DCd4544f7773b489410d0f
+Results for the ballot asking: What's your favorite cryptocurrency out of the following:
+0: Bitcoin received 0 votes
+1: Ethereum received 0 votes
+2: Avalanche received 2 votes
+3: Solana received 0 votes
+4: Algorand received 0 votes
+5: Oasis received 1 votes
+6: Cardano received 0 votes
+7: Dogecoin received 0 votes
+8: Polkadot received 0 votes
+9: Polygon received 0 votes
+10: Chainlink received 0 votes
+11: Shiba Inu received 3 votes
+```
+
 <br></br>
 # From original repository
 # Lesson 4 - Tests and Scripts
