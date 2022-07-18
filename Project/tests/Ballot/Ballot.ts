@@ -18,6 +18,11 @@ async function giveRightToVote(ballotContract: Ballot, voterAddress: any) {
   await tx.wait();
 }
 
+async function delegateVote(ballotContract: Ballot, to: any) {
+  const tx = await ballotContract.delegate(to);
+  await tx.wait();
+}
+
 describe("Ballot", function () {
   let ballotContract: Ballot;
   let accounts: any[];
@@ -113,17 +118,17 @@ describe("Ballot", function () {
   describe("when the voter interact with the delegate function in the contract", function () {
     it("delegate test", async function () {
       const voterAddress = accounts[3].address;
-      const to = accounts[2].address;
-
-      await giveRightToVote(ballotContract, voterAddress);
-      await giveRightToVote(ballotContract, to);
-
+      const toAddress = accounts[2].address;
+      const tx = await ballotContract.giveRightToVote(voterAddress);
+      await tx.wait();
+      const tx2 = await ballotContract.giveRightToVote(toAddress);
+      await tx2.wait();
       const delegateTx = await ballotContract
-        .connect(voterAddress)
-        .delegate(to); // fails here
+        .connect(accounts[3])
+        .delegate(toAddress);
       delegateTx.wait();
       const voter = await ballotContract.voters(voterAddress);
-      expect(voter.delegate).to.be.eq(to.toString());
+      expect(voter.delegate.toString()).to.eq(toAddress.toString());
     });
   });
 
