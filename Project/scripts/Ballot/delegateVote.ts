@@ -21,7 +21,7 @@ async function main() {
       ? ethers.Wallet.fromMnemonic(process.env.MNEMONIC)
       : new ethers.Wallet(process.env.PRIVATE_KEY ?? EXPOSED_KEY);
   console.log(`Using address ${wallet.address}`);
-  const provider = ethers.providers.getDefaultProvider("ropsten");
+  const provider = ethers.providers.getDefaultProvider("goerli");
   const signer = wallet.connect(provider);
   const balanceBN = await signer.getBalance();
   const balance = Number(ethers.utils.formatEther(balanceBN));
@@ -32,8 +32,9 @@ async function main() {
 
   if (process.argv.length < 3) throw new Error("Ballot address missing");
   const ballotAddress = process.argv[2];
-  if (process.argv.length < 4) throw new Error("Delegatee address missing");
-  const to = process.argv[3];
+  if (process.argv.length < 4) throw new Error("Delegate address missing");
+  const toAddress = process.argv[3];
+  const voterAddress = wallet.address;
   console.log(
     `Attaching ballot contract interface to address ${ballotAddress}`
   );
@@ -43,8 +44,17 @@ async function main() {
     signer
   ) as Ballot;
 
-  console.log(`Delegating my vote to ${to} account.`);
-  const delegateTx = await ballotContract.delegate(to);
+  const voterInfo = await ballotContract.voters(voterAddress);
+  const toInfo = await ballotContract.voters(toAddress);
+  console.log(`Delegating ${voterAddress}'s vote to ${toAddress} account.`);
+  console.log(
+    `VoterInfo - Weight: ${voterInfo.weight}, Voted: ${voterInfo.voted}, Delegate: ${voterInfo.delegate}, Vote: ${voterInfo.vote}`
+  );
+  console.log(
+    `ToInfo - Weight: ${toInfo.weight}, Voted: ${toInfo.voted}, Delegate: ${toInfo.delegate}, Vote: ${toInfo.vote}`
+  );
+  const delegateTx = await ballotContract.delegate(toAddress);
+  delegateTx.wait();
   console.log("Awaiting confirmations");
   await delegateTx.wait();
   console.log(`Transaction completed. Hash: ${delegateTx.hash}`);
