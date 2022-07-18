@@ -4,7 +4,7 @@ Team Members:
 - Daiana Bilbao (hello_dayana#4030)
 - Kevin Le (water1925#7425)
 - Christina Polyukh (cpolyukh#5660)
-
+<br><br>
 ## Overview
 We are deploying a ballot smart contract with proposals to vote on, and writing scripts to interact with the smart contract in the following ways:
 * Deploy the ballot smart contract
