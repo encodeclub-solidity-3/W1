@@ -111,9 +111,15 @@ describe("Ballot", function () {
   });
 
   describe("when the voter interact with the delegate function in the contract", function () {
-    // TODO
-    it("is not implemented", async function () {
-      throw new Error("Not implemented");
+    it("delegate test", async function () {
+      const to = accounts[2].address;
+      const voterAddress = accounts[3].address;
+      await giveRightToVote(ballotContract, voterAddress);
+      await giveRightToVote(ballotContract, to);
+      const delegateTx = await ballotContract.connect(voterAddress).delegate(to);
+      delegateTx.wait();
+      const voter = await ballotContract.voters(accounts[3].address);
+      expect(voter.delegate).to.be.eq(to.toString());
     });
   });
 
