@@ -197,6 +197,33 @@ Results for the ballot asking: What's your favorite cryptocurrency out of the fo
 ```
 
 <br></br>
+
+## 7. Querying the voting results AFTER delegating vote & delegate casts vote
+
+From the delegate's account, they cast a vote for proposal 2. Since they are someone's delegate, their vote counts as 2 votes.
+
+### Console Output
+```
+yarn ts-node ./scripts/Ballot/castVote.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f 2
+
+yarn run ts-node ./scripts/Ballot/queryResults.ts 0x16d0b05942F2D3b861DCd4544f7773b489410d0f
+
+Attaching ballot contract interface to address 0x16d0b05942F2D3b861DCd4544f7773b489410d0f
+Results for the ballot asking: What's your favorite cryptocurrency out of the following:
+0: Bitcoin received 0 votes
+1: Ethereum received 0 votes
+2: Avalanche received 2 votes
+3: Solana received 0 votes
+4: Algorand received 0 votes
+5: Oasis received 1 votes
+6: Cardano received 0 votes
+7: Dogecoin received 0 votes
+8: Polkadot received 0 votes
+9: Polygon received 0 votes
+10: Chainlink received 0 votes
+11: Shiba Inu received 3 votes
+```
+
 <br></br>
 # From original repository
 # Lesson 4 - Tests and Scripts
