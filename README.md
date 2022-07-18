@@ -1,3 +1,113 @@
+# Encode Club Solidity Bootcamp
+### Week 1 Project - July 2022 Cohort
+Team Members: 
+- Daiana Bilbao (hello_dayana#4030)
+- Kevin Le (water1925#7425)
+- Christina Polyukh (cpolyukh#5660)
+
+## Overview
+We are deploying a ballot smart contract with proposals to vote on, and writing scripts to interact with the smart contract in the following ways:
+* Deploy the ballot smart contract
+* Query proposals
+* Give voting rights to a wallet
+* Cast a vote to the ballot
+* Delegate vote to another user
+
+### Ballot 
+What is your favorite cryptocurrency?
+
+### Proposals
+0. Bitcoin
+1. Ethereum
+2. Avalanche
+3. Solana
+4. Algorand
+5. Oasis
+6. Cardano
+7. Dogecoin
+8. Polkadot
+9. Polygon
+10. Chainlink
+11. Shiba Inu
+
+<br></br>
+## 1. Deploying the ballot smart contract
+### ```deployment.ts``` at ```/Project/scripts/Ballot/deployment.ts```
+The ballot has been deployed on the Goerli test network.
+
+Contract Address ```0x16d0b05942f2d3b861dcd4544f7773b489410d0f``` [Link](https://goerli.etherscan.io/address/0x16d0b05942f2d3b861dcd4544f7773b489410d0f)
+
+Transaction hash ```0x2d2770a4c9b95b514ddce446e8e9a84fe62ce3c1cf6578a5ec256216d275bc12``` [Link](https://goerli.etherscan.io/tx/0x2d2770a4c9b95b514ddce446e8e9a84fe62ce3c1cf6578a5ec256216d275bc12)
+
+<br></br>
+## 2. Querying ballot proposals
+### ```queryProposals.ts``` at ```/Project/scripts/Ballot/queryProposals.ts```
+Call the ballot contract and iterate through the proposals array. Print each proposal converted from bytes32 to string.
+```  
+console.log("Ballot: What's your favorite cryptocurrency out of the following:")
+  for (let i = 0; i < 12; i++) {
+    const proposal = await ballotContract.proposals(i);
+    const proposalString = ethers.utils.parseBytes32String(proposal.name);
+    console.log(`${i}: ${proposalString}`);
+  }
+
+  console.log(`End of proposals`);
+  ```
+ ### Console Output
+  ```
+  yarn ts-node ./scripts/Ballot/queryProposals.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f
+  
+  Ballot: What's your favorite cryptocurrency out of the following:
+0: Bitcoin
+1: Ethereum
+2: Avalanche
+3: Solana
+4: Algorand
+5: Oasis
+6: Cardano
+7: Dogecoin
+8: Polkadot
+9: Polygon
+10: Chainlink
+11: Shiba Inu
+End of proposals
+```
+
+<br></br>
+## 3. Giving voting rights to a wallet
+### ```giveVotingRights.ts``` at ```/Project/scripts/Ballot/giveVotingRights.ts```
+Only the chairperson (creator of the Ballot smart contract) can give voting rights to other users.
+``` 
+  const chairpersonAddress = await ballotContract.chairperson();
+  if (chairpersonAddress !== signer.address)
+    throw new Error("Caller is not the chairperson for this contract");
+  console.log(`Giving right to vote to ${voterAddress}`);
+  const tx = await ballotContract.giveRightToVote(voterAddress);
+  console.log("Awaiting confirmations");
+  await tx.wait();
+  console.log(`Transaction completed. Hash: ${tx.hash}`);
+  ```
+
+### Console Output
+```
+yarn ts-node ./scripts/Ballot/giveVotingRights.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f 0x2d923D4846b958b19662c1b3d2c686b4b8B2AaDF
+
+Attaching ballot contract interface to address 0x16d0b05942f2d3b861dcd4544f7773b489410d0f
+Giving right to vote to 0x2d923D4846b958b19662c1b3d2c686b4b8B2AaDF
+Awaiting confirmations
+Transaction completed. Hash: 0xaaf076f67624c6247fbf800efd759e8d5e68991337a3ae6e6379b2716492b5c8
+```
+
+<br></br>
+## 4. Casting a vote to the ballot contract
+### ```castVote.ts``` at ```/Project/scripts/Ballot/castVote.ts```
+
+<br></br>
+## 5. Querying the voting results
+### ```queryResults.ts``` at ```/Project/scripts/Ballot/queryResults.ts```
+
+<br></br>
+# From original repository
 # Lesson 4 - Tests and Scripts
 ## Writing unit tests for Ballot.sol
 * More on Ether.js functions and utilities
