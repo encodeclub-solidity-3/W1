@@ -49,7 +49,7 @@ async function main() {
       signer
     ) as Ballot;
 
-    let proposalNum = parseInt(proposal) + 1;
+    let proposalNum = parseInt(proposal);
     console.log(`Casting vote for proposal #${proposalNum} for account ${voter}`);
     const voteTx = await ballotContract.vote(proposal);
     console.log("Awaiting confirmations");
