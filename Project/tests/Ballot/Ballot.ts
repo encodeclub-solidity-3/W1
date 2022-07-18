@@ -94,7 +94,7 @@ describe("Ballot", function () {
   describe("when the voter interact with the vote function in the contract", function () {
     // TODO
 
-    it("test", async function () {
+    it("if successful, marks the voter address as having voted", async function () {
       const voterAddress = accounts[3].address;
       await giveRightToVote(ballotContract, voterAddress);
       await ballotContract.connect(accounts[3]).vote(0);
