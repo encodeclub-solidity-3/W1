@@ -113,6 +113,8 @@ console.log(`Transaction completed. Hash: ${voteTx.hash}`);
 ```
 ### Console Output
 ```
+yarn ts-node ./scripts/Ballot/castVote.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f 11 
+
 Using address 0xf5e2e431864DCd48A5b00713CEf9ab919c539213
 Wallet balance 0.05
 Attaching ballot contract interface to address 0x16d0b05942f2d3b861dcd4544f7773b489410d0f
@@ -140,6 +142,8 @@ console.log(`End of proposals`);
 ### Console Output
 
 ```
+yarn run ts-node ./scripts/Ballot/queryResults.ts 0x16d0b05942F2D3b861DCd4544f7773b489410d0f
+
 Attaching ballot contract interface to address 0x16d0b05942F2D3b861DCd4544f7773b489410d0f
 Results for the ballot asking: What's your favorite cryptocurrency out of the following:
 0: Bitcoin received 0 votes
