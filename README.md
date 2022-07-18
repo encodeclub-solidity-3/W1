@@ -111,6 +111,40 @@ console.log("Awaiting confirmations");
 await voteTx.wait();
 console.log(`Transaction completed. Hash: ${voteTx.hash}`);
 ```
+
+<br></br>
+## 5. Delegating Vote to Someone Else
+### ```delegateVote.ts``` at ```/Project/scripts/Ballot/delegateVote.ts```
+Accounts with voting rights can delegate their vote to another account. Doing so will add their voting weight to their delegate. The Delegate will then have increased voting weight.
+```
+  const voterInfo = await ballotContract.voters(voterAddress);
+  const toInfo = await ballotContract.voters(toAddress);
+  console.log(`Delegating ${voterAddress}'s vote to ${toAddress} account.`);
+  console.log(
+    `VoterInfo - Weight: ${voterInfo.weight}, Voted: ${voterInfo.voted}, Delegate: ${voterInfo.delegate}, Vote: ${voterInfo.vote}`
+  );
+  console.log(
+    `ToInfo - Weight: ${toInfo.weight}, Voted: ${toInfo.voted}, Delegate: ${toInfo.delegate}, Vote: ${toInfo.vote}`
+  );
+  const delegateTx = await ballotContract.delegate(toAddress);
+  delegateTx.wait();
+  console.log("Awaiting confirmations");
+  await delegateTx.wait();
+  console.log(`Transaction completed. Hash: ${delegateTx.hash}`);
+```
+### Console Output
+```
+yarn ts-node ./scripts/Ballot/delegateVote.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f 0x858C60547fE069724B017c8e42c4b27BE4F151C6 
+
+Using address 0x9c1F4Ff1aE57e959128f0356CE15BFE01E3A14E0
+Wallet balance 0.02
+Attaching ballot contract interface to address 0x16d0b05942f2d3b861dcd4544f7773b489410d0f
+Delegating 0x9c1F4Ff1aE57e959128f0356CE15BFE01E3A14E0's vote to 0x858C60547fE069724B017c8e42c4b27BE4F151C6 account.
+VoterInfo - Weight: 1, Voted: false, Delegate: 0x0000000000000000000000000000000000000000, Vote: 0
+ToInfo - Weight: 1, Voted: false, Delegate: 0x0000000000000000000000000000000000000000, Vote: 0
+Awaiting confirmations
+Transaction completed. Hash: 0xcf84c42242939c33d6af51323096ce5740b0d5b64da58ef89f9bd27c3729eddb
+```
 ### Console Output
 ```
 yarn ts-node ./scripts/Ballot/castVote.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f 11 
