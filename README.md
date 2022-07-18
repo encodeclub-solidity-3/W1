@@ -157,6 +157,7 @@ Results for the ballot asking: What's your favorite cryptocurrency out of the fo
 ```
 
 <br></br>
+<br></br>
 # From original repository
 # Lesson 4 - Tests and Scripts
 ## Writing unit tests for Ballot.sol
