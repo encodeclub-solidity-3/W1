@@ -112,7 +112,20 @@ await voteTx.wait();
 console.log(`Transaction completed. Hash: ${voteTx.hash}`);
 ```
 
+### Console Output
+```
+yarn ts-node ./scripts/Ballot/castVote.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f 11 
+
+Using address 0xf5e2e431864DCd48A5b00713CEf9ab919c539213
+Wallet balance 0.05
+Attaching ballot contract interface to address 0x16d0b05942f2d3b861dcd4544f7773b489410d0f
+Casting vote for proposal #11 for account 0xf5e2e431864DCd48A5b00713CEf9ab919c539213
+Awaiting confirmations
+Transaction completed. Hash: 0x47d1b4813158d2388be2307163bda01efa14fd06c545d8c6fe5ba979b21a2601
+```
+
 <br></br>
+
 ## 5. Delegating Vote to Someone Else
 ### ```delegateVote.ts``` at ```/Project/scripts/Ballot/delegateVote.ts```
 Accounts with voting rights can delegate their vote to another account. Doing so will add their voting weight to their delegate. The Delegate will then have increased voting weight.
@@ -145,20 +158,9 @@ ToInfo - Weight: 1, Voted: false, Delegate: 0x0000000000000000000000000000000000
 Awaiting confirmations
 Transaction completed. Hash: 0xcf84c42242939c33d6af51323096ce5740b0d5b64da58ef89f9bd27c3729eddb
 ```
-### Console Output
-```
-yarn ts-node ./scripts/Ballot/castVote.ts 0x16d0b05942f2d3b861dcd4544f7773b489410d0f 11 
-
-Using address 0xf5e2e431864DCd48A5b00713CEf9ab919c539213
-Wallet balance 0.05
-Attaching ballot contract interface to address 0x16d0b05942f2d3b861dcd4544f7773b489410d0f
-Casting vote for proposal #11 for account 0xf5e2e431864DCd48A5b00713CEf9ab919c539213
-Awaiting confirmations
-Transaction completed. Hash: 0x47d1b4813158d2388be2307163bda01efa14fd06c545d8c6fe5ba979b21a2601
-```
-
 <br></br>
-## 5. Querying the voting results
+
+## 6. Querying the voting results
 ### ```queryResults.ts``` at ```/Project/scripts/Ballot/queryResults.ts```
 Call the ballot contract and iterate through the proposals array. Print each proposal and vote count.
 ```
