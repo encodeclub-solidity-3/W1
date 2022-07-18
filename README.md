@@ -78,15 +78,15 @@ End of proposals
 ### ```giveVotingRights.ts``` at ```/Project/scripts/Ballot/giveVotingRights.ts```
 Only the chairperson (creator of the Ballot smart contract) can give voting rights to other users.
 ``` 
-  const chairpersonAddress = await ballotContract.chairperson();
-  if (chairpersonAddress !== signer.address)
-    throw new Error("Caller is not the chairperson for this contract");
-  console.log(`Giving right to vote to ${voterAddress}`);
-  const tx = await ballotContract.giveRightToVote(voterAddress);
-  console.log("Awaiting confirmations");
-  await tx.wait();
-  console.log(`Transaction completed. Hash: ${tx.hash}`);
-  ```
+const chairpersonAddress = await ballotContract.chairperson();
+if (chairpersonAddress !== signer.address)
+  throw new Error("Caller is not the chairperson for this contract");
+console.log(`Giving right to vote to ${voterAddress}`);
+const tx = await ballotContract.giveRightToVote(voterAddress);
+console.log("Awaiting confirmations");
+await tx.wait();
+console.log(`Transaction completed. Hash: ${tx.hash}`);
+```
 
 ### Console Output
 ```
@@ -100,11 +100,61 @@ Transaction completed. Hash: 0xaaf076f67624c6247fbf800efd759e8d5e68991337a3ae6e6
 
 <br></br>
 ## 4. Casting a vote to the ballot contract
+
 ### ```castVote.ts``` at ```/Project/scripts/Ballot/castVote.ts```
+Wallet addresses with voting rights can cast votes to the ballot, to vote for one of the proposals.
+```
+let proposalNum = parseInt(proposal);
+console.log(`Casting vote for proposal #${proposalNum} for account ${voter}`);
+const voteTx = await ballotContract.vote(proposal);
+console.log("Awaiting confirmations");
+await voteTx.wait();
+console.log(`Transaction completed. Hash: ${voteTx.hash}`);
+```
+### Console Output
+```
+Using address 0xf5e2e431864DCd48A5b00713CEf9ab919c539213
+Wallet balance 0.05
+Attaching ballot contract interface to address 0x16d0b05942f2d3b861dcd4544f7773b489410d0f
+Casting vote for proposal #11 for account 0xf5e2e431864DCd48A5b00713CEf9ab919c539213
+Awaiting confirmations
+Transaction completed. Hash: 0x47d1b4813158d2388be2307163bda01efa14fd06c545d8c6fe5ba979b21a2601
+```
 
 <br></br>
 ## 5. Querying the voting results
 ### ```queryResults.ts``` at ```/Project/scripts/Ballot/queryResults.ts```
+Call the ballot contract and iterate through the proposals array. Print each proposal and vote count.
+```
+console.log("Results for the ballot asking: What's your favorite cryptocurrency out of the following:")
+
+for (let i = 0; i < 12; i++) {
+  const proposal = await ballotContract.proposals(i);
+  const proposalString = ethers.utils.parseBytes32String(proposal.name);
+  console.log(`${i}: ${proposalString} received ${proposal.voteCount} votes`);
+}
+
+console.log(`End of proposals`);
+```
+
+### Console Output
+
+```
+Attaching ballot contract interface to address 0x16d0b05942F2D3b861DCd4544f7773b489410d0f
+Results for the ballot asking: What's your favorite cryptocurrency out of the following:
+0: Bitcoin received 0 votes
+1: Ethereum received 0 votes
+2: Avalanche received 0 votes
+3: Solana received 0 votes
+4: Algorand received 0 votes
+5: Oasis received 1 votes
+6: Cardano received 0 votes
+7: Dogecoin received 0 votes
+8: Polkadot received 0 votes
+9: Polygon received 0 votes
+10: Chainlink received 0 votes
+11: Shiba Inu received 3 votes
+```
 
 <br></br>
 # From original repository
