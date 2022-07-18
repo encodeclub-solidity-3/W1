@@ -112,13 +112,17 @@ describe("Ballot", function () {
 
   describe("when the voter interact with the delegate function in the contract", function () {
     it("delegate test", async function () {
-      const to = accounts[2].address;
       const voterAddress = accounts[3].address;
+      const to = accounts[2].address;
+
       await giveRightToVote(ballotContract, voterAddress);
       await giveRightToVote(ballotContract, to);
-      const delegateTx = await ballotContract.connect(voterAddress).delegate(to);
+
+      const delegateTx = await ballotContract
+        .connect(voterAddress)
+        .delegate(to); // fails here
       delegateTx.wait();
-      const voter = await ballotContract.voters(accounts[3].address);
+      const voter = await ballotContract.voters(voterAddress);
       expect(voter.delegate).to.be.eq(to.toString());
     });
   });

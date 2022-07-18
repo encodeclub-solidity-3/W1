@@ -33,7 +33,7 @@ async function main() {
   if (process.argv.length < 3) throw new Error("Ballot address missing");
   const ballotAddress = process.argv[2];
   if (process.argv.length < 4) throw new Error("Delegatee address missing");
-  const delegatee = process.argv[3];
+  const to = process.argv[3];
   console.log(
     `Attaching ballot contract interface to address ${ballotAddress}`
   );
@@ -43,8 +43,8 @@ async function main() {
     signer
   ) as Ballot;
 
-  console.log(`Delegating my vote to ${delegatee} account.`);
-  const delegateTx = await ballotContract.delegate(delegatee);
+  console.log(`Delegating my vote to ${to} account.`);
+  const delegateTx = await ballotContract.delegate(to);
   console.log("Awaiting confirmations");
   await delegateTx.wait();
   console.log(`Transaction completed. Hash: ${delegateTx.hash}`);
