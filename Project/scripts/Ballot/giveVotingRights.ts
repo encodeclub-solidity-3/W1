@@ -1,28 +1,23 @@
-import { Contract, ethers } from "ethers";
-import "dotenv/config";
+import { Contract } from "ethers";
 import * as ballotJson from "../../artifacts/contracts/Ballot.sol/Ballot.json";
 // eslint-disable-next-line node/no-missing-import
 import { Ballot } from "../../typechain";
+import { setupSigner } from "./utils/walletSetup";
 
-// This key is already public on Herong's Tutorial Examples - v1.03, by Dr. Herong Yang
-// Do never expose your keys like this
-const EXPOSED_KEY =
-  "8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f";
+/*
+This script allows the chairperson to give voting rights to an address provided as input.
+This allows the user to cast and delegate votes for the provided Ballot contract. The
+wallet used in the environment to run this script must belong to the Ballot chairperson.
 
+Arguments:
+- Address of the ballot requiring voting rights to be given
+- User address that you want to give voting rights to
+*/
 async function main() {
-  const wallet =
-    process.env.MNEMONIC && process.env.MNEMONIC.length > 0
-      ? ethers.Wallet.fromMnemonic(process.env.MNEMONIC)
-      : new ethers.Wallet(process.env.PRIVATE_KEY ?? EXPOSED_KEY);
-  console.log(`Using address ${wallet.address}`);
-  const provider = ethers.providers.getDefaultProvider("goerli");
-  const signer = wallet.connect(provider);
-  const balanceBN = await signer.getBalance();
-  const balance = Number(ethers.utils.formatEther(balanceBN));
-  console.log(`Wallet balance ${balance}`);
-  if (balance < 0.01) {
-    throw new Error("Not enough ether");
-  }
+  // Initialize signer
+  const [, signer] = await setupSigner();
+  
+  // Store script arguments as local variables
   if (process.argv.length < 3) throw new Error("Ballot address missing");
   const ballotAddress = process.argv[2];
   if (process.argv.length < 4) throw new Error("Voter address missing");
@@ -35,9 +30,11 @@ async function main() {
     ballotJson.abi,
     signer
   ) as Ballot;
+  // Verify that the caller is the chairperson
   const chairpersonAddress = await ballotContract.chairperson();
   if (chairpersonAddress !== signer.address)
     throw new Error("Caller is not the chairperson for this contract");
+  // Give voting rights by calling the Ballot contract
   console.log(`Giving right to vote to ${voterAddress}`);
   const tx = await ballotContract.giveRightToVote(voterAddress);
   console.log("Awaiting confirmations");
